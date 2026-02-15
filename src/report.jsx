@@ -15,7 +15,11 @@ export default function ReportCard() {
 
   const handleChange = (index, field, value) => {
     const updated = [...subjects];
-    updated[index][field] = Number(value);
+     if (field === "name") {
+    updated[index][field] = value; // keep as text
+  } else {
+    updated[index][field] = Number(value) || 0; // convert numbers safely
+  }
     setSubjects(updated);
   };
 
@@ -130,7 +134,7 @@ const overallAverage = (totalObtained / totalPossible) * 100;
 <table className=" min-w-[900px] w-full mt-2 border-collapse">
   <thead>
     <tr className="bg-blue-100 text-left">
-      <th className="p-2">Subject</th>
+      <th className="p-2 w-1/6">Subject</th>
       <th className="p-2 bg-blue-50">Test 1</th>
       <th className="p-2 bg-blue-50">Test 2</th>
       <th className="p-2 bg-blue-50">Exam</th>
