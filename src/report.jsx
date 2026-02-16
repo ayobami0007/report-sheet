@@ -1,4 +1,4 @@
-import { useState } from "react"; 
+import { useState, useRef, useEffect } from "react"; 
 import logo from "./assets/logo.png"
 
 
@@ -14,6 +14,38 @@ export default function ReportCard() {
   ]);
 
   
+const scrollRef = useRef(null)
+
+const [showLeft, setShowLeft] = useState(false);
+const [showRight, setShowRight] = useState(true);
+
+useEffect(() => {
+  const el = scrollRef.current;
+
+  const handleScroll = () => {
+    if (!el) return;
+
+    setShowLeft(el.scrollLeft > 0);
+    setShowRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  };
+
+  if (el) {
+    el.addEventListener("scroll", handleScroll);
+    handleScroll(); // run once on load
+  }
+
+  return () => {
+    if (el) el.removeEventListener("scroll", handleScroll);
+  };
+}, []);
+
+const handleRemove = (indexToRemove) => {
+  setSubjects((prev) => 
+  prev.filter((_, index)=> index !== indexToRemove)
+)
+} 
+
+
 const handleChange = (index, field, value) => {
   const updated = [...subjects];
 
@@ -161,32 +193,38 @@ const overallAverage =
   </button>
 </div>
 
-<div className="overflow-x-auto">
-<table className=" w-full  mt-2 table-auto border-collapse">
-  <thead className="block sm:table-header-group">
-    <tr className="bg-blue-100 text-left">
-      <th className=" block sm:table-cell p-2 w-1/6 sm:w-1/2">Subject</th>
-      <th className=" block sm:table-cell p-2 bg-blue-50">Test 1</th>
-      <th className=" block sm:table-cell p-2 bg-blue-50">Test 2</th>
-      <th className=" block sm:table-cell p-2 bg-blue-50">Exam</th>
-      <th className="block sm:table-cell p-2 bg-blue-50">Total</th>
-      <th className="block sm:table-cell p-2">Total Obtainable</th>
-      <th className="block sm:table-cell p-2">Class Average</th>
-      <th className="block sm:table-cell p-2">1st Term</th>
-      <th className="block sm:table-cell p-2">2nd Term</th>
-      <th className="block sm:table-cell p-2">3rd Term</th>
-      <th className="block sm:table-cell p-2">Position</th>
-      <th className="block sm:table-cell p-2 bg-blue-50">Grade</th>
+
+<div className="relative">
+ 
+<div ref={scrollRef} className="overflow-x-auto">
+  
+<table className=" w-full  mt-2 table-fixed border-collapse">
+  <thead className="">
+    <tr className="   bg-blue-100 text-left">
+      <th className="  p-2  min-w-[300px] ">Subject</th>
+      <th className="  p-2 bg-blue-50">Test 1</th>
+      <th className=" p-2 bg-blue-50">Test 2</th>
+      <th className=" p-2 bg-blue-50">Exam</th>
+      <th className=" p-2 bg-blue-50">Total</th>
+      <th className=" p-2">Total Obtainable</th>
+      <th className=" p-2">Class Average</th>
+      <th className=" p-2">1st Term</th>
+      <th className=" p-2">2nd Term</th>
+      <th className=" p-2">3rd Term</th>
+      <th className=" p-2">Position</th>
+      <th className=" p-2 bg-blue-50">Grade</th>
+      <th className="p-2 print:hidden">Action</th>
+
     </tr>
   </thead>
-  <tbody className="block sm:table-row-group">
+  <tbody className="">
     {subjects.map((sub, index) => {
       const total = calculateTotal(sub);
       const grade = calculateGrade(total);
       return (
-        <tr key={index} className="odd:bg-gray-50 block sm:table-row mb-4 sm:mb-0 border p-2 rounded even:bg-white">
+        <tr key={index} className="odd:bg-gray-50  mb-4 sm:mb-0 border p-2 rounded even:bg-white">
           {/* Subject Name */}
-          <td className="p-2 font-bold block sm:table-cell">
+          <td className="p-2 font-bold  w-[300px]">
             <input
               type="text"
               value={sub.name}
@@ -268,11 +306,48 @@ const overallAverage =
 
           {/* Grade */}
           <td className="p-2 bg-blue-50 text-center font-bold">{grade}</td>
+
+          <td className="p-2 text-center">
+  <button
+    onClick={() => handleRemove(index)}
+    className="text-red-500 hover:text-red-700 font-semibold print:hidden"
+  >
+    Cancel
+  </button>
+</td>
+
         </tr>
       );
     })}
   </tbody>
 </table>
+</div>
+
+ <p className=" lg:hidden print:hidden"
+>Scroll</p>
+
+  {showLeft && (
+    <button
+      onClick={() =>
+        scrollRef.current.scrollBy({ left: -200, behavior: "smooth" })
+      }
+      className="sm:hidden absolute left-0 top-1/2 -translate-y-1/2 text-gray-500 text-2xl pl-2 print:hidden"
+    >
+      ←
+    </button>
+  )}
+
+  {showRight && (
+    <button
+      onClick={() =>
+        scrollRef.current.scrollBy({ left: 200, behavior: "smooth" })
+      }
+      className="sm:hidden absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 text-2xl pr-2 print:hidden"
+    >
+      →
+    </button>
+  )}
+
 </div>
       {/* Add Subject Button */}
     {/* <div className="mt-6 mx-auto w-3/4 bg-white shadow-md rounded p-4 flex justify-around items-center"> */}
@@ -289,9 +364,9 @@ const overallAverage =
 </div> 
 
         {/* Footer Section */}
-<div className="bg-gray-50 text-center border-t-4 border-blue-900 p-8 mt-6 space-y-2">
+<div className="bg-gray-50  border-t-4 border-blue-900 p-8 mt-6 space-y-2">
   {/* Signatures */}
-  <div className="flex flex-col sm:flex-row justify-between gap-4
+  <div className="flex flex-col sm:flex-row justify-between items-center gap-4
 ">
    
         <div className="flex justify-center items-center">
