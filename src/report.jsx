@@ -13,15 +13,29 @@ export default function ReportCard() {
     { name: "Mathematics", test1: 0, test2: 0, exam: 0 },
   ]);
 
-  const handleChange = (index, field, value) => {
-    const updated = [...subjects];
-     if (field === "name") {
-    updated[index][field] = value; // keep as text
+  
+const handleChange = (index, field, value) => {
+  const updated = [...subjects];
+
+  if (field === "name") {
+    updated[index][field] = value;
   } else {
-    updated[index][field] = Number(value) || 0; // convert numbers safely
+    let numericValue = Number(value) || 0;
+
+    if (field === "test1" || field === "test2") {
+      numericValue = Math.min(numericValue, 20);
+    }
+
+    if (field === "exam") {
+      numericValue = Math.min(numericValue, 60);
+    }
+
+    updated[index][field] = numericValue;
   }
-    setSubjects(updated);
-  };
+
+  setSubjects(updated);
+};
+
 
   const addSubject = () => {
     setSubjects([...subjects, { name: "", test1: 0, test2: 0, exam: 0 }]);
@@ -29,19 +43,36 @@ export default function ReportCard() {
 
   const calculateTotal = (sub) => sub.test1 + sub.test2 + sub.exam;
 
-  const calculateGrade = (total) => {
-    if (total >= 100) return "A";
-    if (total >= 60) return "B";
-    if (total >= 50) return "C";
-    if (total >= 40) return "D";
-    return "F";
-  };
+const [gradingScale, setGradingScale] = useState([
+  { grade: "A", min: 70 },
+  { grade: "B", min: 60 },
+  { grade: "C", min: 50 },
+  { grade: "D", min: 45 },
+  { grade: "F", min: 0 },
+]);
+
+const calculateGrade = (score) => {
+  const sortedScale = [...gradingScale].sort((a, b) => b.min - a.min);
+
+  for (let scale of sortedScale) {
+    if (score >= scale.min) {
+      return scale.grade;
+    }
+  }
+  return "F";
+};
+
+
+  
+
 
 
 const totalObtained = subjects.reduce((sum, sub) => sum + calculateTotal(sub), 0);
 const totalPossible = subjects.length * 100;
-const overallAverage = (totalObtained / totalPossible) * 100;
-
+const overallAverage =
+  totalPossible > 0
+    ? (totalObtained / totalPossible) * 100
+    : 0;
 
 
   const finalGrade = calculateGrade(overallAverage);
@@ -131,31 +162,31 @@ const overallAverage = (totalObtained / totalPossible) * 100;
 </div>
 
 <div className="overflow-x-auto">
-<table className=" min-w-[900px] w-full mt-2 border-collapse">
-  <thead>
+<table className=" w-full  mt-2 table-auto border-collapse">
+  <thead className="block sm:table-header-group">
     <tr className="bg-blue-100 text-left">
-      <th className="p-2 w-1/6">Subject</th>
-      <th className="p-2 bg-blue-50">Test 1</th>
-      <th className="p-2 bg-blue-50">Test 2</th>
-      <th className="p-2 bg-blue-50">Exam</th>
-      <th className="p-2 bg-blue-50">Total</th>
-      <th className="p-2">Total Obtainable</th>
-      <th className="p-2">Class Average</th>
-      <th className="p-2">1st Term</th>
-      <th className="p-2">2nd Term</th>
-      <th className="p-2">3rd Term</th>
-      <th className="p-2">Position</th>
-      <th className="p-2 bg-blue-50">Grade</th>
+      <th className=" block sm:table-cell p-2 w-1/6 sm:w-1/2">Subject</th>
+      <th className=" block sm:table-cell p-2 bg-blue-50">Test 1</th>
+      <th className=" block sm:table-cell p-2 bg-blue-50">Test 2</th>
+      <th className=" block sm:table-cell p-2 bg-blue-50">Exam</th>
+      <th className="block sm:table-cell p-2 bg-blue-50">Total</th>
+      <th className="block sm:table-cell p-2">Total Obtainable</th>
+      <th className="block sm:table-cell p-2">Class Average</th>
+      <th className="block sm:table-cell p-2">1st Term</th>
+      <th className="block sm:table-cell p-2">2nd Term</th>
+      <th className="block sm:table-cell p-2">3rd Term</th>
+      <th className="block sm:table-cell p-2">Position</th>
+      <th className="block sm:table-cell p-2 bg-blue-50">Grade</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody className="block sm:table-row-group">
     {subjects.map((sub, index) => {
       const total = calculateTotal(sub);
       const grade = calculateGrade(total);
       return (
-        <tr key={index} className="odd:bg-gray-50 even:bg-white">
+        <tr key={index} className="odd:bg-gray-50 block sm:table-row mb-4 sm:mb-0 border p-2 rounded even:bg-white">
           {/* Subject Name */}
-          <td className="p-2 font-bold">
+          <td className="p-2 font-bold block sm:table-cell">
             <input
               type="text"
               value={sub.name}
@@ -168,6 +199,8 @@ const overallAverage = (totalObtained / totalPossible) * 100;
           <td className="p-2 bg-blue-50">
             <input
               type="number"
+              max="20"
+              min="0"
               value={sub.test1}
               onChange={(e) => handleChange(index, "test1", e.target.value)}
               className="w-full bg-transparent border-b border-gray-300 focus:outline-none"
@@ -176,6 +209,8 @@ const overallAverage = (totalObtained / totalPossible) * 100;
           <td className="p-2 bg-blue-50">
             <input
               type="number"
+               max="20"
+              min="0"
               value={sub.test2}
               onChange={(e) => handleChange(index, "test2", e.target.value)}
               className="w-full bg-transparent border-b border-gray-300 focus:outline-none"
@@ -184,6 +219,8 @@ const overallAverage = (totalObtained / totalPossible) * 100;
           <td className="p-2 bg-blue-50">
             <input
               type="number"
+               max="60"
+              min="0"
               value={sub.exam}
               onChange={(e) => handleChange(index, "exam", e.target.value)}
               className="w-full bg-transparent border-b border-gray-300 focus:outline-none"
@@ -256,13 +293,31 @@ const overallAverage = (totalObtained / totalPossible) * 100;
   {/* Signatures */}
   <div className="flex flex-col sm:flex-row justify-between gap-4
 ">
-    <p className="italic">Teacher's Signature: ____________________</p>
-    <p className="italic">Head Teacher's Signature: ____________________</p>
+   
+        <div className="flex justify-center items-center">
+      <label className="text-gray-700 font-semibold">Teacher's Signature:</label>
+      <input
+        type="text"
+     
+        // onChange={(e) => setSession(e.target.value)}
+        className="w-24 bg-transparent border-b border-dashed border-gray-800 focus:outline-none text-center"
+      />
+    </div>
+   
+      <div className="flex justify-center items-center">
+      <label className="text-gray-700 font-semibold"> Head Teacher's Signature:</label>
+      <input
+        type="text"
+     
+       
+        className="w-24 bg-transparent border-b border-dashed border-gray-800 focus:outline-none text-center"
+      />
+    </div>
   </div>
 
   {/* Class Teacher Comment */}
  {/* Comments Section */}
-<div className="flex flex-col sm:flex-row justify-center gap-4
+<div className="flex flex-col sm:flex-row justify-center items-center gap-4
 ">
   {/* Class Teacher Comment */}
   <div className="w-1/2">
@@ -287,15 +342,51 @@ const overallAverage = (totalObtained / totalPossible) * 100;
   {/* Attendance */}
   <div className="flex flex-col sm:flex-row justify-between gap-4
 ">
-    <p className="text-gray-700">No. of Times School Opened: ______</p>
-    <p className="text-gray-700">No. of Times Present: ______</p>
+  
+      <div className="flex items-center justify-center">
+      <label className="text-gray-700 font-semibold">No. of Times School Opened: </label>
+      <input
+        type="text"
+     
+        // onChange={(e) => setSession(e.target.value)}
+        className="w-24 bg-transparent border-b border-dashed border-gray-800 focus:outline-none text-center"
+      />
+    </div>
+    <div className="flex items-center justify-center">
+      <label className="text-gray-700 font-semibold">No. of Times Present: </label>
+      <input
+        type="text"
+     
+        // onChange={(e) => setSession(e.target.value)}
+        className="w-24 bg-transparent border-b border-dashed border-gray-800 focus:outline-none text-center"
+      />
+    </div>
+    {/* <p className="text-gray-700">No. of Times Present: ______</p> */}
   </div>
 
   {/* Next Term Info */}
   <div className="flex flex-col sm:flex-row justify-between gap-4
 ">
-    <p className="text-gray-700">Next Term Begins: ____________</p>
-    <p className="text-gray-700">Next Term School Fees: ____________________</p>
+    {/* <p className="text-gray-700"> ____________</p> */}
+    <div className="flex items-center justify-center">
+      <label className="text-gray-700 font-semibold">Next Term Begins: </label>
+      <input
+        type="text"
+     
+        // onChange={(e) => setSession(e.target.value)}
+        className="w-24 bg-transparent border-b border-dashed border-gray-800 focus:outline-none text-center"
+      />
+    </div>
+    <div className="flex items-center justify-center">
+      <label className="text-gray-700 font-semibold">Next Term School Fees: </label>
+      <input
+        type="text"
+     
+        // onChange={(e) => setSession(e.target.value)}
+        className="w-24 bg-transparent border-b border-dashed border-gray-800 focus:outline-none text-center"
+      />
+    </div>
+    {/* <p className="text-gray-700">Next Term School Fees: ____________________</p> */}
   </div>
 </div>
 
