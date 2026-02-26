@@ -1,7 +1,7 @@
 import React from 'react'
 import MainLayout from './pages/MainLayout'
 import Report from './pages/report'
-import { Exam } from './pages/Exam'
+import   Exam  from './pages/ExamPaperPage'
 import BasicReport from './pages/BasicReport'
 import SecReport from './pages/SecReport'
 import { Route, Routes, useNavigate, BrowserRouter } from 'react-router-dom'

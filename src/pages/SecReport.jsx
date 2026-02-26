@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import InputField from "../components/common/InputField";
-import TextArea from "../components/common/TextArea";
-import ScoreInput from "../components/common/ScoreInput";
+import InputField from "../components/common/result/InputField";
+import TextArea from "../components/common/result/TextArea";
+import ScoreInput from "../components/common/result/ScoreInput";
 
 // ── Grading Scale Data ──────────────────────────────────────────
 const GRADING_SCALE = [

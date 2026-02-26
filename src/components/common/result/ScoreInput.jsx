@@ -6,7 +6,7 @@ const ScoreInput = ({
   className = "",
 }) => (
   <input
-    type="number"
+   
     min="0"
     max={max}
     value={value}
