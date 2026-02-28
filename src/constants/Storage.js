@@ -1,22 +1,27 @@
-    // src/constants/storage.js
+// src/constants/Storage.js
+// Shared storage utility for all exam paper pages.
+// Pass a unique key per school to avoid draft collisions.
 
-const STORAGE_KEY = "exam_paper_draft_v1";
+export const STORAGE_KEYS = {
+  secondary: "exam_paper_draft_sec_v1",
+  primary:   "exam_paper_draft_pri_v1",
+};
 
-export function loadDraft() {
+export function loadDraft(key) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 }
 
-export function saveDraft(state) {
+export function saveDraft(key, state) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(key, JSON.stringify(state));
   } catch {}
 }
 
-export function clearDraft() {
-  localStorage.removeItem(STORAGE_KEY);
+export function clearDraft(key) {
+  localStorage.removeItem(key);
 }

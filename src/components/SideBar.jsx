@@ -21,7 +21,10 @@ const SideBar = () => {
           <NavLink to="sec-Report">Secondary Report</NavLink>
           <NavLink to="basic-Report"> Basic Report</NavLink>
           </SideBarLink>
-          <SideBarLink to="/exam" icon={AcademicCapIcon} label="ExamQuestion"/>
+          <SideBarLink to="/exam" icon={AcademicCapIcon} label="ExamQuestion">
+           <NavLink to="sec-Paper">Secondary Paper</NavLink>
+          <NavLink to="basic-Paper"> Basic Paper</NavLink>
+          </SideBarLink>
         </nav>
     </div>
      <div className={`transition-all duration-300 ease-in-out overflow-hidden md:hidden ${ open ? "max-h-40 opacity-100" : "max-h-0 opacity-0" }`} >
@@ -30,7 +33,10 @@ const SideBar = () => {
        <NavLink to="sec-Report">Secondary Report</NavLink>
           <NavLink to="basic-Report"> Basic Report</NavLink>
        </SideBarLink>
-       <SideBarLink to="/exam" icon={AcademicCapIcon} label="ExamQuestion" onClick={handleClose}/>
+       <SideBarLink to="/exam" icon={AcademicCapIcon} label="ExamQuestion" >
+         <NavLink to="sec-Paper">Secondary Paper</NavLink>
+          <NavLink to="basic-Paper"> Basic Paper</NavLink>
+       </SideBarLink>
        </nav>
        </div>
     </div>
