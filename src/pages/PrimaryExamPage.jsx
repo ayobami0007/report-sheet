@@ -3,7 +3,7 @@
 // Primary school entry point.
 // This file only defines config — zero logic lives here.
 
-import SCHOOL from "../constants/school";
+import SCHOOL from "../constants/School";
 import { STORAGE_KEYS } from "../constants/Storage";
 import ExamPaperPage from "./ExamPaperPage";
 import ObjectiveSectionComponent from "../components/BasicPaper/ObjectiveSection";
