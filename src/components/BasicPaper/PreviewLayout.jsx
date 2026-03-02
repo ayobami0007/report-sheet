@@ -208,7 +208,7 @@
 // }
 // src/components/BasicPaper/PreviewLayout.jsx
 
-import SCHOOL from "../../constants/school";
+import SCHOOL from "../../constants/School";
 
 export default function PrimaryPreviewLayout({ exam, onBack, onPrint }) {
   let qNum = 0;

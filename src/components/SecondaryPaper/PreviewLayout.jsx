@@ -186,7 +186,7 @@
 
 // src/components/SecondaryPaper/PreviewLayout.jsx
 
-import SCHOOL from "../../constants/school";
+import SCHOOL from "../../constants/School";
 
 export default function SecondaryPreviewLayout({ exam, onBack, onPrint }) {
   let qNum = 0;
