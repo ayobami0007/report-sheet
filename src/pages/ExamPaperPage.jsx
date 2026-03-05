@@ -1,6 +1,6 @@
-// // src/pages/ExamPaperPage.jsx
 
-// import { useState, useEffect, useCallback } from "react";
+
+// import { useState, useEffect, useCallback, useMemo } from "react";
 // import { loadDraft, saveDraft, clearDraft } from "../constants/Storage";
 // import BuilderLayout from "../components/exam/BuilderLayout";
 
@@ -49,7 +49,7 @@
 //     PreviewLayoutComponent,
 //   } = config;
 
-//   const INITIAL_STATE = {
+//   const INITIAL_STATE = useMemo(() => ({
 //     subject: "",
 //     classLevel: "",
 //     term: "",
@@ -58,7 +58,11 @@
 //     instructions: defaultInstructions,
 //     objectives: [createEmptyObjective()],
 //     theories: [createEmptyTheory(theoryExtraFields)],
-//   };
+//     // paste mode content
+//     inputMode: "build",           // "build" | "paste"
+//     pasteObjectives: "",
+//     pasteTheory: "",
+//   }), [defaultInstructions, theoryExtraFields]);
 
 //   const [exam, setExam] = useState(() => loadDraft(storageKey) || INITIAL_STATE);
 //   const [mode, setMode] = useState("builder");
@@ -71,6 +75,11 @@
 
 //   const updateField = useCallback((field, value) => {
 //     setExam(prev => ({ ...prev, [field]: value }));
+//   }, []);
+
+//   // ── Input mode toggle ─────────────────────────────────────────────────────
+//   const setInputMode = useCallback((inputMode) => {
+//     setExam(prev => ({ ...prev, inputMode }));
 //   }, []);
 
 //   // ── Objective handlers ────────────────────────────────────────────────────
@@ -145,7 +154,7 @@
 //       setMode("builder");
 //       setHasDraft(false);
 //     }
-//   }, [storageKey]);
+//   }, [storageKey, INITIAL_STATE]);
 
 //   // ── Preview mode ──────────────────────────────────────────────────────────
 //   if (mode === "preview") {
@@ -167,6 +176,7 @@
 //       exam={exam}
 //       hasDraft={hasDraft}
 //       updateField={updateField}
+//       setInputMode={setInputMode}
 //       addObjective={addObjective}
 //       addSectionHeading={addSectionHeading}
 //       addPassage={addPassage}
@@ -183,7 +193,6 @@
 //     />
 //   );
 // }
-
 
 
 // src/pages/ExamPaperPage.jsx
@@ -246,8 +255,7 @@ export default function ExamPaperPage({ config }) {
     instructions: defaultInstructions,
     objectives: [createEmptyObjective()],
     theories: [createEmptyTheory(theoryExtraFields)],
-    // paste mode content
-    inputMode: "build",           // "build" | "paste"
+    inputMode: "build",
     pasteObjectives: "",
     pasteTheory: "",
   }), [defaultInstructions, theoryExtraFields]);
@@ -255,6 +263,14 @@ export default function ExamPaperPage({ config }) {
   const [exam, setExam] = useState(() => loadDraft(storageKey) || INITIAL_STATE);
   const [mode, setMode] = useState("builder");
   const [hasDraft, setHasDraft] = useState(!!loadDraft(storageKey));
+
+  // ── Image state — NOT in localStorage ─────────────────────────────────────
+  // Build mode: image cards in the list (afterIdx = position in objectives/theories array)
+  const [objectiveImageCards, setObjectiveImageCards] = useState([]);
+  const [theoryImageCards, setTheoryImageCards] = useState([]);
+  // Paste mode: images with afterQuestion number
+  const [pasteObjectiveImages, setPasteObjectiveImages] = useState([]);
+  const [pasteTheoryImages, setPasteTheoryImages] = useState([]);
 
   useEffect(() => {
     saveDraft(storageKey, exam);
@@ -265,9 +281,42 @@ export default function ExamPaperPage({ config }) {
     setExam(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  // ── Input mode toggle ─────────────────────────────────────────────────────
   const setInputMode = useCallback((inputMode) => {
     setExam(prev => ({ ...prev, inputMode }));
+  }, []);
+
+  // ── Build mode image handlers ─────────────────────────────────────────────
+  const addImageCard = useCallback((section, img) => {
+    if (section === "objective") {
+      setObjectiveImageCards(prev => [...prev, img]);
+    } else {
+      setTheoryImageCards(prev => [...prev, img]);
+    }
+  }, []);
+
+  const removeImageCard = useCallback((section, id) => {
+    if (section === "objective") {
+      setObjectiveImageCards(prev => prev.filter(img => img.id !== id));
+    } else {
+      setTheoryImageCards(prev => prev.filter(img => img.id !== id));
+    }
+  }, []);
+
+  // ── Paste mode image handlers ─────────────────────────────────────────────
+  const addPasteImage = useCallback((section, img) => {
+    if (section === "objective") {
+      setPasteObjectiveImages(prev => [...prev, img]);
+    } else {
+      setPasteTheoryImages(prev => [...prev, img]);
+    }
+  }, []);
+
+  const removePasteImage = useCallback((section, id) => {
+    if (section === "objective") {
+      setPasteObjectiveImages(prev => prev.filter(img => img.id !== id));
+    } else {
+      setPasteTheoryImages(prev => prev.filter(img => img.id !== id));
+    }
   }, []);
 
   // ── Objective handlers ────────────────────────────────────────────────────
@@ -339,16 +388,24 @@ export default function ExamPaperPage({ config }) {
     if (window.confirm("Clear all data and start a fresh exam paper?")) {
       clearDraft(storageKey);
       setExam(INITIAL_STATE);
+      setObjectiveImageCards([]);
+      setTheoryImageCards([]);
+      setPasteObjectiveImages([]);
+      setPasteTheoryImages([]);
       setMode("builder");
       setHasDraft(false);
     }
   }, [storageKey, INITIAL_STATE]);
 
-  // ── Preview mode ──────────────────────────────────────────────────────────
+  // ── Preview ───────────────────────────────────────────────────────────────
   if (mode === "preview") {
     return (
       <PreviewLayoutComponent
         exam={exam}
+        objectiveImageCards={objectiveImageCards}
+        theoryImageCards={theoryImageCards}
+        pasteObjectiveImages={pasteObjectiveImages}
+        pasteTheoryImages={pasteTheoryImages}
         onBack={() => setMode("builder")}
         onPrint={handlePrint}
       />
@@ -374,6 +431,14 @@ export default function ExamPaperPage({ config }) {
       addTheory={addTheory}
       removeTheory={removeTheory}
       updateTheory={updateTheory}
+      objectiveImageCards={objectiveImageCards}
+      theoryImageCards={theoryImageCards}
+      addImageCard={addImageCard}
+      removeImageCard={removeImageCard}
+      pasteObjectiveImages={pasteObjectiveImages}
+      pasteTheoryImages={pasteTheoryImages}
+      addPasteImage={addPasteImage}
+      removePasteImage={removePasteImage}
       ObjectiveSectionComponent={ObjectiveSectionComponent}
       TheorySectionComponent={TheorySectionComponent}
       onPreview={() => setMode("preview")}
