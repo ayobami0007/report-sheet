@@ -292,7 +292,7 @@
 import { useRef, useState } from "react";
 import { inputClass } from "../../constants/Inputclass";
 import Field from "./Field";
-import { formatPastedQuestions } from "../../utils/formatPaste";
+
 
 // ── Paste Mode Image Adder ────────────────────────────────────────────────────
 // Teacher picks image + types "after which question" number

@@ -205,7 +205,7 @@
 
 // src/components/BasicPaper/PreviewLayout.jsx
 
-import SCHOOL from "../../constants/school";
+import SCHOOL from "../../constants/School";
 import { formatPastedQuestionsPrimary } from "../../utils/formatPaste";
 export default function PrimaryPreviewLayout({
   exam,

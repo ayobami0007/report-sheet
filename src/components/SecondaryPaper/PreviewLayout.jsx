@@ -258,7 +258,7 @@
 // Options always print inline: 1. question  (a) opt  (b) opt  (c) opt  (d) opt
 
 import { useRef, useState, useLayoutEffect } from "react";
-import SCHOOL from "../../constants/school";
+import SCHOOL from "../../constants/School";
 import { formatPastedQuestions } from "../../utils/formatPaste";
 
 const MAX_HEIGHT = 2 * 1123; // 2 A4 pages in px
