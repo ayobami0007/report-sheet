@@ -263,7 +263,7 @@ import { formatPastedQuestions } from "../../utils/formatPaste";
 
 const MAX_HEIGHT = 2 * 1123; // 2 A4 pages in px
 const START_FONT = 13;       // start at 13px
-const MIN_FONT = 7;          // never go below 7px
+const MIN_FONT = 11;          // never go below 7px
 const STEP = 0.5;            // shrink by 0.5px each iteration
 
 export default function SecondaryPreviewLayout({
@@ -297,10 +297,10 @@ export default function SecondaryPreviewLayout({
     <>
       <style>{`
       @media print {
-  @page { size: A4; margin: 12mm 15mm; }
+  @page { size: A4; margin: 4mm 4mm; }
   body { background: white !important; overflow: visible !important; }
   .no-print { display: none !important; }
-  * { overflow: visible !important; }
+  * { overflow: visible !important; padding: 0 !important; margin: 0 !important; }
   .a4-paper {
     box-shadow: none !important;
     max-width: none !important;

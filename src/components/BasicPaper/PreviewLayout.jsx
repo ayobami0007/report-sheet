@@ -223,10 +223,10 @@ export default function PrimaryPreviewLayout({
     <>
       <style>{`
        @media print {
-  @page { size: A4; margin: 12mm 15mm; }
+  @page { size: A4; margin: 4mm  4mm; }
   body { background: white !important; overflow: visible !important; }
   .no-print { display: none !important; }
-  * { overflow: visible !important; }
+  * { overflow: visible !important;  padding: 0 !important; margin: 0 !important; }
   .a4-paper {
     box-shadow: none !important;
     max-width: none !important;
@@ -249,7 +249,7 @@ export default function PrimaryPreviewLayout({
 
         <div className="p-4 sm:p-8 flex justify-center">
           <div
-            className="a4-paper bg-white w-full max-w-[1100px] min-h-[1123px] p-4 shadow-2xl"
+            className="a4-paper bg-white w-full max-w-[1100px] min-h-[1123px] p-2 shadow-2xl"
             style={{ fontFamily: "'Times New Roman', Times, serif", fontSize: "16px", color: "#111", lineHeight: "1.6" }}
           >
             {/* School Header */}
@@ -276,8 +276,7 @@ export default function PrimaryPreviewLayout({
                   <td style={{ padding: "2px 0" }}><strong>Date:</strong> ____________________</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "2px 0" }}><strong>Name:</strong> ____________________________</td>
-                  <td style={{ padding: "2px 0" }}><strong>Score:</strong> ____________</td>
+                  <td style={{ padding: "2px 0" }} colSpan={2}><strong>Name:</strong> ___________________________________________________________________</td>
                 </tr>
               </tbody>
             </table>
@@ -417,12 +416,12 @@ function renderPasteWithImages(pasteText, images) {
   if (!images || images.length === 0) {
     return (
       <div style={{ fontSize: "15px", lineHeight: "1.8", whiteSpace: "pre-wrap", fontFamily: "'Times New Roman', Times, serif" }}>
-        {formatPastedQuestionsPrimary (pasteText || "")}
+        {formatPastedQuestionsPrimary(pasteText || "")}
       </div>
     );
   }
 
-  const lines = formatPastedQuestionsPrimary (pasteText || "").split("\n");
+  const lines = formatPastedQuestionsPrimary(pasteText || "").split("\n");
   const questionLineRegex = /^\s*(\d+)[.)]\s/;
   const result = [];
   let currentQNum = null;
