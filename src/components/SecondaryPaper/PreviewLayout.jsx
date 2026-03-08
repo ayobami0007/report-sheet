@@ -262,8 +262,8 @@ import SCHOOL from "../../constants/School";
 import { formatPastedQuestions } from "../../utils/formatPaste";
 
 const MAX_HEIGHT = 2 * 1123; // 2 A4 pages in px
-const START_FONT = 13;       // start at 13px
-const MIN_FONT = 11;          // never go below 7px
+const START_FONT =14 ;       // start at 13px
+const MIN_FONT = 13;          // never go below 7px
 const STEP = 0.5;            // shrink by 0.5px each iteration
 
 export default function SecondaryPreviewLayout({
