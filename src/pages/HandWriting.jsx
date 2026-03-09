@@ -1,0 +1,280 @@
+// src/pages/HandwritingPage.jsx
+//
+// Handwriting practice sheet builder.
+// Teacher types a sentence, app renders it in dotted trace font
+// with ruled lines below for student practice.
+
+import { useState, useCallback } from "react";
+import SCHOOL from "../constants/School";
+import { inputClass } from "../constants/Inputclass";
+
+// ── Preview ───────────────────────────────────────────────────────────────────
+function HandwritingPreview({ data, onBack, onPrint }) {
+    const lineCount = 20; // number of ruled lines
+
+    return (
+        <>
+            <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Foundation:wght@400;500;600;700&display=swap');
+
+        @media print {
+          @page { size: A4; margin: 4mm 4mm; }
+          body { background: white !important; overflow: visible !important; }
+          .no-print { display: none !important; }
+          * { overflow: visible !important; }
+          .hw-paper {
+            box-shadow: none !important;
+            max-width: none !important;
+            width: 100% !important;
+            height: auto !important;
+            min-height: unset !important;
+            overflow: visible !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+          }
+        }
+
+        .trace-text {
+          font-family: 'Edu NSW ACT Foundation', cursive;
+          font-size: 52px;
+          line-height: 1.2;
+          color: #bbb;
+          letter-spacing: 2px;
+          word-break: break-word;
+        }
+
+        .ruled-line {
+          border-bottom: 1.5px solid #222;
+          margin-bottom: 0;
+          position: relative;
+        }
+
+        .ruled-line::before {
+          content: '';
+          display: block;
+          border-bottom: 1px solid #ddd;
+          margin-bottom: 10px;
+        }
+
+        .ruled-line-wrapper {
+          height: 36px;
+          border-bottom: 1.8px solid #333;
+          position: relative;
+        }
+
+        .ruled-line-wrapper::after {
+          content: '';
+          position: absolute;
+          bottom: 16px;
+          left: 0;
+          right: 0;
+          border-bottom: 1px dashed #ccc;
+        }
+      `}</style>
+
+            <div className="min-h-screen bg-neutral-600">
+                <div className="no-print sticky top-0 z-50 bg-stone-900 text-stone-100 flex items-center justify-between px-4 py-2.5 shadow-xl">
+                    <button onClick={onBack} className="text-xs px-3 py-1.5 rounded-lg border border-white/20 hover:bg-white/10 transition">← Back to Editor</button>
+                    <span className="font-serif text-base">Preview</span>
+                    <button onClick={onPrint} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-500 text-stone-900 hover:bg-amber-400 transition">🖨 Print / Save PDF</button>
+                </div>
+
+                <div className="p-4 sm:p-8 flex justify-center">
+                    <div
+                        className="hw-paper bg-white w-full max-w-[794px] p-8 shadow-2xl"
+                        style={{ fontFamily: "'Times New Roman', Times, serif", color: "#111" }}
+                    >
+                        {/* School Header */}
+                        <div style={{ textAlign: "center", marginBottom: "10px" }}>
+                            <p style={{ fontSize: "15px", fontWeight: "700", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "2px" }}>
+                                {data.schoolType === "primary" ? SCHOOL.primaryName : SCHOOL.name}
+                            </p>
+                            <p style={{ fontSize: "10px", color: "#555", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "1px" }}>{SCHOOL.motto}</p>
+                            <p style={{ fontSize: "10px", color: "#666", marginBottom: "6px" }}>{SCHOOL.address}</p>
+                            <hr style={{ borderTop: "2px solid #111", margin: "4px 0 2px" }} />
+                            <hr style={{ borderTop: "1px solid #111", margin: "0 0 6px" }} />
+                            <p style={{ fontSize: "11px", fontWeight: "700", textTransform: "uppercase" }}>
+                                {data.term} Examination ({data.session})
+                            </p>
+                        </div>
+
+                        {/* Meta */}
+                        <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "8px", fontSize: "12px" }}>
+                            <tbody>
+                                <tr>
+                                    <td style={{ padding: "2px 0" }} ><strong>SUBJECT:</strong> {data.subject || "HAND WRITING"}</td>
+
+                                    <td style={{ padding: "2px 0" }} ><strong>CLASS:</strong> {data.classLevel}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ padding: "2px 0", width: "100%" }} colSpan={2}>
+                                        <strong>NAME:</strong>
+                                        <span style={{ display: "inline-block", borderBottom: "1px solid #111", width: "calc(80% - 50px)", verticalAlign: "bottom" }} />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr style={{ borderTop: "1.5px solid #111", margin: "" }} />
+
+                        {/* Trace sentence */}
+                        {data.sentence && (
+                            <div style={{ marginBottom: "12px", borderBottom: "1.8px solid #333", paddingBottom: "2px" }}>
+                                <p className="trace-text">{data.sentence}</p>
+                            </div>
+                        )}
+
+                        {/* Ruled lines */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+                            {Array.from({ length: lineCount }).map((_, i) => (
+                                <div key={i} className="ruled-line-wrapper" />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+
+// ── Builder ───────────────────────────────────────────────────────────────────
+export default function Handwriting() {
+    const [mode, setMode] = useState("builder");
+    const [data, setData] = useState({
+        schoolType: "primary",
+        classLevel: "",
+        term: "1st Term",
+        session: "2025/2026",
+        subject: "HAND WRITING",
+        sentence: "",
+    });
+
+    const update = useCallback((field, value) => {
+        setData(prev => ({ ...prev, [field]: value }));
+    }, []);
+
+    const handlePrint = useCallback(() => {
+        window.print();
+    }, []);
+
+    if (mode === "preview") {
+        return (
+            <HandwritingPreview
+                data={data}
+                onBack={() => setMode("builder")}
+                onPrint={handlePrint}
+            />
+        );
+    }
+
+    return (
+        <div className="flex flex-col min-h-screen bg-stone-100">
+            {/* Header */}
+            <header className="sticky top-0 z-50 bg-stone-900 text-stone-100 h-14 flex items-center px-4 shadow-lg">
+                <div className="w-full max-w-2xl mx-auto flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <span className="text-lg">✏️</span>
+                        <span className="font-serif text-lg tracking-wide">Handwriting Builder</span>
+                    </div>
+                    <button
+                        onClick={() => setMode("preview")}
+                        className="text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-500 text-stone-900 hover:bg-amber-400 transition"
+                    >
+                        Preview →
+                    </button>
+                </div>
+            </header>
+
+            <main className="w-full max-w-2xl mx-auto px-4 py-4 pb-20 flex flex-col gap-4">
+
+                {/* School Banner */}
+                <div className="bg-stone-900 text-stone-100 rounded-2xl p-5 text-center">
+                    <p className="font-serif text-xl mb-1">Handwriting Practice Sheet</p>
+                    <p className="text-xs text-stone-400">For primary school use</p>
+                </div>
+
+                {/* Details */}
+                <section className="bg-white rounded-2xl p-5 shadow-sm">
+                    <h2 className="font-serif text-xl mb-4 text-stone-800">Sheet Details</h2>
+                    <div className="grid grid-cols-2 gap-3 max-[400px]:grid-cols-1">
+
+                        <div className="col-span-2">
+                            <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1 block">School</label>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => update("schoolType", "primary")}
+                                    className={`flex-1 py-2 rounded-xl text-sm font-semibold transition ${data.schoolType === "primary" ? "bg-stone-900 text-white" : "bg-stone-100 text-stone-500"}`}
+                                >
+                                    Primary
+                                </button>
+                                <button
+                                    onClick={() => update("schoolType", "secondary")}
+                                    className={`flex-1 py-2 rounded-xl text-sm font-semibold transition ${data.schoolType === "secondary" ? "bg-stone-900 text-white" : "bg-stone-100 text-stone-500"}`}
+                                >
+                                    Secondary
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1 block">Class</label>
+                            <input className={inputClass} value={data.classLevel} onChange={e => update("classLevel", e.target.value)} placeholder="e.g. Basic 1" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1 block">Subject</label>
+                            <input className={inputClass} value={data.subject} onChange={e => update("subject", e.target.value)} placeholder="HAND WRITING" />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1 block">Term</label>
+                            <select className={inputClass} value={data.term} onChange={e => update("term", e.target.value)}>
+                                <option>1st Term</option>
+                                <option>2nd Term</option>
+                                <option>3rd Term</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1 block">Session</label>
+                            <input className={inputClass} value={data.session} onChange={e => update("session", e.target.value)} placeholder="2025/2026" />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Sentence */}
+                <section className="bg-white rounded-2xl p-5 shadow-sm">
+                    <h2 className="font-serif text-xl mb-1 text-stone-800">Practice Sentence</h2>
+                    <p className="text-xs text-gray-400 mb-3">This will appear in dotted trace handwriting font at the top of the sheet.</p>
+                    <input
+                        className={inputClass}
+                        value={data.sentence}
+                        onChange={e => update("sentence", e.target.value)}
+                        placeholder="e.g. Lion is a dangerous animal"
+                    />
+                    {data.sentence && (
+                        <div className="mt-4 p-4 bg-stone-50 rounded-xl border border-stone-100">
+                            <p className="text-xs text-stone-400 mb-2">Preview:</p>
+                            <p style={{
+                                fontFamily: "'Edu NSW ACT Foundation', cursive",
+                                fontSize: "20px",
+                                color: "#bbb",
+                                letterSpacing: "2px"
+                            }}>
+                                {data.sentence}
+                            </p>
+                            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Foundation:wght@400;700&display=swap" />
+                        </div>
+                    )}
+                </section>
+
+                <button
+                    onClick={() => setMode("preview")}
+                    className="w-full max-w-sm mx-auto block bg-stone-900 text-stone-100 font-semibold text-base py-4 rounded-2xl hover:bg-stone-800 transition"
+                >
+                    Preview Sheet →
+                </button>
+            </main>
+        </div>
+    );
+}

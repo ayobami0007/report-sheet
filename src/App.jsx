@@ -6,7 +6,8 @@ import BasicReport from './pages/BasicReport'
 import SecReport from './pages/SecReport'
 import SecondaryExamPage from './pages/SecondaryExamPage'
 import PrimaryExamPage from './pages/PrimaryExamPage'
-import { Route, Routes, useNavigate, BrowserRouter } from 'react-router-dom'
+import { Route, Routes,  BrowserRouter } from 'react-router-dom'
+import Handwriting from './pages/HandWriting'
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
    <Route path='/basic-Report' element={<BasicReport/>}/>
    <Route path='/basic-Paper' element={<PrimaryExamPage/>}/>
    <Route path='/sec-Paper' element={<SecondaryExamPage/>}/>
+   <Route path='/hand-Writing' element={<Handwriting/>}/>
 
    </Route>
    </Routes>

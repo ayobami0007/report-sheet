@@ -24,6 +24,7 @@ const SideBar = () => {
           <SideBarLink to="/exam" icon={AcademicCapIcon} label="ExamQuestion">
            <NavLink to="sec-Paper">Secondary Paper</NavLink>
           <NavLink to="basic-Paper"> Basic Paper</NavLink>
+          <NavLink to="hand-Writing">Hand Writing</NavLink>
           </SideBarLink>
         </nav>
     </div>
@@ -36,6 +37,7 @@ const SideBar = () => {
        <SideBarLink to="/exam" icon={AcademicCapIcon} label="ExamQuestion" >
          <NavLink to="sec-Paper">Secondary Paper</NavLink>
           <NavLink to="basic-Paper"> Basic Paper</NavLink>
+            <NavLink to="hand-Writing">Hand Writing</NavLink>
        </SideBarLink>
        </nav>
        </div>
