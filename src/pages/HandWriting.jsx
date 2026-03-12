@@ -192,7 +192,7 @@ export default function HandwritingPage() {
   }, []);
 
   const addColumn = () => {
-    if (data.columns.length >= 4) return;
+    if (data.columns.length >= 10) return;
     setData(prev => ({ ...prev, columns: [...prev.columns, ""] }));
   };
 
