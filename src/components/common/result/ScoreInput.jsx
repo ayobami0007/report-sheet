@@ -12,7 +12,7 @@ const ScoreInput = ({
     value={value}
     onChange={onChange}
     placeholder={placeholder}
-    className={`w-full border-b border-blue-200 text-sm text-center px-1 py-0.5 focus:outline-none focus:border-blue-500 bg-transparent
+    className={`w-full border-b border-blue-200 text-xl text-center px-1 py-0.5 focus:outline-none focus:border-blue-500 bg-transparent
       print:border-gray-400 print:text-[10px]
       ${className}`}
   />

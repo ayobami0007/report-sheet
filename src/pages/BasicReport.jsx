@@ -149,7 +149,8 @@ export default function PrimaryReport() {
             border-bottom: 1px solid #aaa !important;
             border-radius: 0 !important;
             padding: 1px 2px !important;
-            font-size: 10px !important;
+            font-size: 16px !important;
+          
             background: transparent !important;
           }
           table  { font-size: 10px !important; }

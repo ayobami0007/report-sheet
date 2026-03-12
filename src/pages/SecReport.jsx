@@ -150,14 +150,14 @@ export default function SecReport() {
             border-bottom: 1px solid #999 !important;
             border-radius: 0 !important;
             padding: 1px 2px !important;
-            font-size: 10px !important;
+            font-size: 16px !important;
             background: transparent !important;
           }
 
           textarea {
             border: none !important;
             border-bottom: 1px solid #999 !important;
-            font-size: 10px !important;
+            font-size: 16px !important;
             background: transparent !important;
             resize: none !important;
           }
