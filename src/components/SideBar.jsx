@@ -28,7 +28,7 @@ const SideBar = () => {
           </SideBarLink>
         </nav>
     </div>
-     <div className={`transition-all duration-300 ease-in-out overflow-hidden md:hidden ${ open ? "max-h-40 opacity-100" : "max-h-0 opacity-0" }`} >
+     <div className={`transition-all duration-300 ease-in-out overflow-hidden md:hidden ${ open ? "max-h-screen opacity-100" : "max-h-0 opacity-0" }`} >
        <nav className='flex  flex-col items-center justify-center gap-2 md:hidden'>
        <SideBarLink to="/report" icon={CalculatorIcon} label="Report" >
        <NavLink to="sec-Report" onClick={handleClose}>Secondary Report</NavLink>
