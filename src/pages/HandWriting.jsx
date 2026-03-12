@@ -285,7 +285,7 @@
 // Two modes: Sentence (trace a full sentence) and Letters (column-per-letter grid)
 
 import { useState, useCallback } from "react";
-import SCHOOL from "../constants/school";
+import SCHOOL from "../constants/School";
 import { inputClass } from "../constants/Inputclass";
 
 const PRINT_STYLES = `
