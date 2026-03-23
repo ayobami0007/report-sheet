@@ -3,6 +3,9 @@ import InputField from "../components/common/result/InputField";
 import TextArea from "../components/common/result/TextArea";
 import ScoreInput from "../components/common/result/ScoreInput";
 
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
+
 // ── Grading Scale Data ──────────────────────────────────────────
 const GRADING_SCALE = [
   { grade: "A1", range: "75 – 100", color: "text-green-700" },
@@ -41,6 +44,8 @@ const emptySubject = () => ({
   position: "",
   remarks: "",
 });
+
+
 
 // ── Main Component ──────────────────────────────────────────────
 export default function SecReport() {
@@ -106,6 +111,49 @@ export default function SecReport() {
     window.scrollTo({ top: 0, behavior: "instant" });
     setTimeout(() => window.print(), 300);
   };
+const handleDownload = async () => {
+  const element = document.querySelector(".print-container");
+  element.classList.remove("overflow-hidden");
+  
+  const originalWidth = element.style.width;
+  element.style.width = "1400px";
+
+  const canvas = await html2canvas(element, { 
+    scale: 2, 
+    useCORS: true, 
+    scrollY: 0, 
+    windowWidth: 1400,
+    backgroundColor: "#ffffff",
+    logging: false,
+    onclone: (clonedDoc) => {
+      // replace all inputs with plain text divs
+      clonedDoc.querySelectorAll("input, textarea").forEach((el) => {
+        const div = clonedDoc.createElement("div");
+        div.innerText = el.value || "";
+        div.style.cssText = `
+          font-size: 14px;
+          font-weight: 700;
+          color: #1e3a8a;
+          border-bottom: 1px solid #999;
+          min-height: 24px;
+          padding: 2px;
+          width: 100%;
+        `;
+        el.parentNode.replaceChild(div, el);
+      });
+    }
+  });
+
+  const imgData = canvas.toDataURL("image/jpeg", 1.0);
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a3" });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
+  pdf.save("report-sheet.pdf");
+
+  element.style.width = originalWidth;
+  element.classList.add("overflow-hidden");
+};
 
   // ── JSX ───────────────────────────────────────────────────────
   return (
@@ -196,6 +244,13 @@ font-weight: 700 !important;
           >
             🖨 Print / Save PDF
           </button>
+
+          <button
+  onClick={handleDownload}
+  className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition"
+>
+  ⬇ Download PDF
+</button>
         </div>
 
         {/* ── Main Document ── */}

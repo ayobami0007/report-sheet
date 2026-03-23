@@ -5,6 +5,9 @@ import InputField from "../components/common/result/InputField";
 import TextArea from "../components/common/result/TextArea";
 import ScoreInput from "../components/common/result/ScoreInput";
 
+
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
 // ── Grading Scale ───────────────────────────────────────────────
 const GRADING_SCALE = [
   { grade: "A", range: "70 – 100", color: "text-blue-800",   bg: "bg-blue-50"   },
@@ -119,6 +122,51 @@ export default function PrimaryReport() {
     setTimeout(() => window.print(), 300);
   };
 
+  const handleDownload = async () => {
+  const element = document.querySelector(".print-wrap");
+  element.classList.remove("overflow-hidden");
+  
+  const originalWidth = element.style.width;
+  element.style.width = "1400px";
+
+  const canvas = await html2canvas(element, { 
+    scale: 2, 
+    useCORS: true, 
+    scrollY: 0, 
+    windowWidth: 1400,
+    backgroundColor: "#ffffff",
+    logging: false,
+    onclone: (clonedDoc) => {
+      // replace all inputs with plain text divs
+      clonedDoc.querySelectorAll("input, textarea").forEach((el) => {
+        const div = clonedDoc.createElement("div");
+        div.innerText = el.value || "";
+        div.style.cssText = `
+          font-size: 14px;
+          font-weight: 700;
+          color: #1e3a8a;
+          border-bottom: 1px solid #999;
+          min-height: 24px;
+          padding: 2px;
+          width: 100%;
+        `;
+        el.parentNode.replaceChild(div, el);
+      });
+    }
+  });
+
+  const imgData = canvas.toDataURL("image/jpeg", 1.0);
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a3" });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
+  pdf.save("report-sheet.pdf");
+
+  element.style.width = originalWidth;
+  element.classList.add("overflow-hidden");
+};
+
+
   return (
     <>
       <style>{`
@@ -176,6 +224,12 @@ export default function PrimaryReport() {
           <button onClick={handlePrint} className="bg-blue-900 hover:bg-blue-800 text-white text-sm font-bold px-4 py-2 rounded-lg shadow transition">
             🖨 Print / Save PDF
           </button>
+                  <button
+  onClick={handleDownload}
+  className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition"
+>
+  ⬇ Download PDF
+</button>
         </div>
 
         {/* ── Document Card ── */}
