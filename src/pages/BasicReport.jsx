@@ -128,17 +128,16 @@ const handleDownload = async () => {
   setIsDownloading(true);
 
   try {
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     const element = document.querySelector(".print-wrap");
-    const originalWidth = element.style.width;
     element.classList.remove("overflow-hidden");
     element.style.width = "1400px";
 
     const canvas = await html2canvas(element, {
-      scale: 2,
+      scale: 1.5, // lower scale on mobile
       useCORS: true,
-      scrollY: 0,
+      scrollY: -window.scrollY, // fix mobile scroll offset
       windowWidth: 1400,
       backgroundColor: "#ffffff",
       logging: false,
@@ -153,18 +152,22 @@ const handleDownload = async () => {
     });
 
     const imgData = canvas.toDataURL("image/jpeg", 1.0);
+    
+    // destroy canvas after use to free memory
+    canvas.width = 0;
+    canvas.height = 0;
+
     const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a3" });
     pdf.addImage(imgData, "JPEG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
     pdf.save("report-sheet.pdf");
 
-    element.style.width = originalWidth;
+    element.style.width = "";
     element.classList.add("overflow-hidden");
 
   } catch (err) {
     console.error("Download failed:", err);
   }
 
-  // always reset outside try/catch/finally
   setIsDownloading(false);
 };
 
