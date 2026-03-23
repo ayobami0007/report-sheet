@@ -113,46 +113,49 @@ export default function SecReport() {
   };
 const handleDownload = async () => {
   const element = document.querySelector(".print-container");
-  element.classList.remove("overflow-hidden");
-  
   const originalWidth = element.style.width;
-  element.style.width = "1400px";
 
-  const canvas = await html2canvas(element, { 
-    scale: 2, 
-    useCORS: true, 
-    scrollY: 0, 
-    windowWidth: 1400,
-    backgroundColor: "#ffffff",
-    logging: false,
-    onclone: (clonedDoc) => {
-      // replace all inputs with plain text divs
-      clonedDoc.querySelectorAll("input, textarea").forEach((el) => {
-        const div = clonedDoc.createElement("div");
-        div.innerText = el.value || "";
-        div.style.cssText = `
-          font-size: 14px;
-          font-weight: 700;
-          color: #1e3a8a;
-          border-bottom: 1px solid #999;
-          min-height: 24px;
-          padding: 2px;
-          width: 100%;
-        `;
-        el.parentNode.replaceChild(div, el);
-      });
-    }
-  });
+  try {
+    element.classList.remove("overflow-hidden");
+    element.style.width = "1400px";
 
-  const imgData = canvas.toDataURL("image/jpeg", 1.0);
-  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a3" });
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
-  pdf.save("report-sheet.pdf");
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      scrollY: 0,
+      windowWidth: 1400,
+      backgroundColor: "#ffffff",
+      logging: false,
+      onclone: (clonedDoc) => {
+        clonedDoc.querySelectorAll("input, textarea").forEach((el) => {
+          const div = clonedDoc.createElement("div");
+          div.innerText = el.value || "";
+          div.style.cssText = `
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a8a;
+            border-bottom: 1px solid #999;
+            min-height: 24px;
+            padding: 2px;
+            width: 100%;
+          `;
+          el.parentNode.replaceChild(div, el);
+        });
+      }
+    });
 
-  element.style.width = originalWidth;
-  element.classList.add("overflow-hidden");
+    const imgData = canvas.toDataURL("image/jpeg", 1.0);
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a3" });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
+    pdf.save("report-sheet.pdf");
+
+  } finally {
+    // always restore no matter what
+    element.style.width = originalWidth;
+    element.classList.add("overflow-hidden");
+  }
 };
 
   // ── JSX ───────────────────────────────────────────────────────
