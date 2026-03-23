@@ -722,12 +722,12 @@ export default function SecReport() {
 
   // ── Dynamic zoom based on subject count ───────────────────────
   const zoom = subjects.length <= 8  ? 0.98
-    : subjects.length <= 10 ? 0.88
-    : subjects.length <= 12 ? 0.88
-    : subjects.length <= 14 ? 0.88
-    : subjects.length <= 16 ? 0.76
-    : subjects.length <= 18 ? 0.72
-    : 0.72;
+    : subjects.length <= 10 ? 0.82
+    : subjects.length <= 12 ? 0.82
+    : subjects.length <= 14 ? 0.82
+    : subjects.length <= 16 ? 0.72
+    : subjects.length <= 18 ? 0.70
+    : 0.70;
 
   // ── Print Handler ─────────────────────────────────────────────
   const handlePrint = () => {
@@ -1035,6 +1035,18 @@ export default function SecReport() {
               </div>
 
             </div>
+
+              <div className="border border-blue-200 rounded-lg overflow-hidden print:rounded-none">
+                <div className="section-header bg-blue-900 text-white text-xs font-bold uppercase px-3 py-1 tracking-widest">Comments</div>
+                <div className="p-2 flex gap-2">
+                  <div className="flex-1">
+                    <TextArea label="Class Teacher" value={student.teacherComment} onChange={updateStudent("teacherComment")} placeholder="Comment..." rows={1} />
+                  </div>
+                  <div className="flex-1">
+                    <TextArea label="Principal" value={student.principalComment} onChange={updateStudent("principalComment")} placeholder="Comment..." rows={1} />
+                  </div>
+                </div>
+              </div>
 
             {/* ── Overall Performance Summary ── */}
             {summary && (
