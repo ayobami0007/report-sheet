@@ -134,7 +134,12 @@ export default function PrimaryReport() {
             padding: 0 !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            
           }
+
+          ::-webkit-scrollbar {
+  display: none !important;
+}
           .no-print  { display: none !important; }
           .min-h-screen { background: white !important; padding: 0 !important; margin: 0 !important; }
           .print-wrap {

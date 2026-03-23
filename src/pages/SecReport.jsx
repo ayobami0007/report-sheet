@@ -126,6 +126,10 @@ export default function SecReport() {
             print-color-adjust: exact;
           }
 
+          ::-webkit-scrollbar {
+  display: none !important;
+}
+
           .no-print { display: none !important; }
 
           .min-h-screen {
