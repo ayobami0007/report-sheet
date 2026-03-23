@@ -127,13 +127,11 @@ const handleDownload = async () => {
   if (isDownloading) return;
   setIsDownloading(true);
 
-  // small delay to reset state
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  const element = document.querySelector(".print-wrap");
-  const originalWidth = element.style.width;
-
   try {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const element = document.querySelector(".print-wrap");
+    const originalWidth = element.style.width;
     element.classList.remove("overflow-hidden");
     element.style.width = "1400px";
 
@@ -159,11 +157,15 @@ const handleDownload = async () => {
     pdf.addImage(imgData, "JPEG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
     pdf.save("report-sheet.pdf");
 
-  } finally {
     element.style.width = originalWidth;
     element.classList.add("overflow-hidden");
-    setIsDownloading(false);
+
+  } catch (err) {
+    console.error("Download failed:", err);
   }
+
+  // always reset outside try/catch/finally
+  setIsDownloading(false);
 };
 
 
