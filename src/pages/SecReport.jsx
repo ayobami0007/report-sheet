@@ -757,6 +757,10 @@ export default function SecReport() {
         backgroundColor: "#ffffff",
         logging: false,
         onclone: (clonedDoc) => {
+
+          clonedDoc.querySelectorAll(".no-print").forEach((el) => {
+  el.style.display = "none";
+}); 
           clonedDoc.querySelectorAll("input, textarea").forEach((el) => {
             const div = clonedDoc.createElement("div");
             div.innerText = el.value || "";
@@ -846,7 +850,7 @@ export default function SecReport() {
           th, td { padding: 1px 3px !important; font-weight: 900 !important; line-height: 1.2 !important; }
 
           .header-logo   { width: 50px !important; height: 50px !important; }
-          .school-title  { font-size: 16px !important; }
+          .school-title  { font-size: 32px !important; font-weight: 700;}
           .school-subtitle { font-size: 8px !important; }
           .section-header { font-size: 10px !important; padding: 2px 6px !important; }
           .grade-box     { font-size: 8px !important; }
@@ -993,7 +997,7 @@ export default function SecReport() {
             </div>
 
             {/* ── Attendance | Comments | Next Term — single row ── */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
 
               {/* Attendance */}
               <div className="border border-blue-200 rounded-lg overflow-hidden print:rounded-none">
@@ -1008,18 +1012,7 @@ export default function SecReport() {
                 </div>
               </div>
 
-              {/* Comments */}
-              <div className="border border-blue-200 rounded-lg overflow-hidden print:rounded-none">
-                <div className="section-header bg-blue-900 text-white text-xs font-bold uppercase px-3 py-1 tracking-widest">Comments</div>
-                <div className="p-2 flex gap-2">
-                  <div className="flex-1">
-                    <TextArea label="Class Teacher" value={student.teacherComment} onChange={updateStudent("teacherComment")} placeholder="Comment..." rows={1} />
-                  </div>
-                  <div className="flex-1">
-                    <TextArea label="Principal" value={student.principalComment} onChange={updateStudent("principalComment")} placeholder="Comment..." rows={1} />
-                  </div>
-                </div>
-              </div>
+          
 
               {/* Next Term */}
               <div className="border border-blue-200 rounded-lg overflow-hidden print:rounded-none">
