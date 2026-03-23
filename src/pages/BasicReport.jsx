@@ -138,7 +138,7 @@ export default function PrimaryReport() {
           .no-print  { display: none !important; }
           .min-h-screen { background: white !important; padding: 0 !important; margin: 0 !important; }
           .print-wrap {
-            font-size: 10px !important;
+            font-size: 16px !important;
             max-width: 100% !important;
             width: 100% !important;
             box-shadow: none !important;
@@ -148,13 +148,13 @@ export default function PrimaryReport() {
             border: none !important;
             border-bottom: 1px solid #aaa !important;
             border-radius: 0 !important;
-            padding: 1px 2px !important;
-            font-size: 16px !important;
-          
+            padding: 8px 2px !important;
+            font-size: 18px !important;
+           font-weight: 700 !important; 
             background: transparent !important;
           }
-          table  { font-size: 10px !important; }
-          th, td { padding: 2px 4px !important; }
+          table  { font-size: 18px !important;   font-weight: 700 !important; }
+          th, td { padding: 6px 10px !important;  font-weight: 700 !important;  }
           .school-name  { font-size: 20px !important; }
         }
       `}</style>

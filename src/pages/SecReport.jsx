@@ -135,7 +135,7 @@ export default function SecReport() {
           }
 
           .print-container {
-            font-size: 10px !important;
+            font-size: 16px !important;
             padding: 0 !important;
             margin: 0 !important;
             box-shadow: none !important;
@@ -149,21 +149,23 @@ export default function SecReport() {
             border: none !important;
             border-bottom: 1px solid #999 !important;
             border-radius: 0 !important;
-            padding: 1px 2px !important;
-            font-size: 16px !important;
+            padding: 8px 2px !important;
+            font-size: 18px !important;
+font-weight: 700 !important; 
             background: transparent !important;
           }
 
           textarea {
             border: none !important;
             border-bottom: 1px solid #999 !important;
-            font-size: 16px !important;
+            font-size: 18px !important;
             background: transparent !important;
+            font-weight: 700 !important; 
             resize: none !important;
           }
 
-          table  { font-size: 10px !important; }
-          th, td { padding: 3px 4px !important; }
+          table  { font-size: 18px !important; font-weight: 700 !important;  }
+          th, td { padding: 3px 4px !important; font-weight: 700 !important;  }
 
           .header-logo   { width: 55px !important; height: 55px !important; }
           .school-title  { font-size: 18px !important; }
