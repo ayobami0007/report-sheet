@@ -135,15 +135,15 @@ export default function SecReport() {
           }
 
           .print-container {
-            font-size: 16px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            box-shadow: none !important;
-            border: none !important;
-            border-radius: 0 !important;
-            max-width: 100% !important;
-            width: 100% !important;
-          }
+  zoom: 0.79;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
 
           input {
             border: none !important;

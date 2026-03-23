@@ -138,6 +138,7 @@ export default function PrimaryReport() {
           .no-print  { display: none !important; }
           .min-h-screen { background: white !important; padding: 0 !important; margin: 0 !important; }
           .print-wrap {
+           zoom: 0.66;
             font-size: 16px !important;
             max-width: 100% !important;
             width: 100% !important;
