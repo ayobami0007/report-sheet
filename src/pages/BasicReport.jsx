@@ -672,12 +672,12 @@ export default function PrimaryReport() {
 
   // ── Dynamic zoom based on subject count ───────────────────────
   const zoom =
-    subjects.length <= 6  ? 0.95 :
-    subjects.length <= 8  ? 0.88 :
-    subjects.length <= 10 ? 0.80 :
-    subjects.length <= 12 ? 0.75 :
-    subjects.length <= 14 ? 0.73 :
-    subjects.length <= 16 ? 0.70 :
+    subjects.length <= 6  ? 0.80 :
+    subjects.length <= 8  ? 0.72 :
+    subjects.length <= 10 ? 0.68 :
+    subjects.length <= 11 ? 0.60 :
+    subjects.length <= 15 ? 0.64 :
+    subjects.length <= 16 ? 0.62 :
     subjects.length <= 18 ? 0.69 :
     0.69;
 

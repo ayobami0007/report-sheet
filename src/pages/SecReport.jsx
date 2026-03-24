@@ -721,13 +721,13 @@ export default function SecReport() {
   const summary = computeSummary();
 
   // ── Dynamic zoom based on subject count ───────────────────────
-  const zoom = subjects.length <= 8  ? 0.98
-    : subjects.length <= 10 ? 0.82
-    : subjects.length <= 12 ? 0.82
-    : subjects.length <= 14 ? 0.82
-    : subjects.length <= 16 ? 0.72
-    : subjects.length <= 18 ? 0.70
-    : 0.70;
+  const zoom = subjects.length <= 8  ? 0.88
+    : subjects.length <= 10 ? 0.72
+    : subjects.length <= 12 ? 0.72
+    : subjects.length <= 15 ? 0.70
+    : subjects.length <= 16 ? 0.62
+    : subjects.length <= 18 ? 0.60
+    : 0.60;
 
   // ── Print Handler ─────────────────────────────────────────────
   const handlePrint = () => {
