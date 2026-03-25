@@ -671,15 +671,13 @@ export default function PrimaryReport() {
   const finalGrade = scored.length > 0 ? getGrade(Number(overallAverage)) : "–";
 
   // ── Dynamic zoom based on subject count ───────────────────────
-  const zoom =
-    subjects.length <= 6  ? 0.80 :
-    subjects.length <= 8  ? 0.72 :
-    subjects.length <= 10 ? 0.68 :
-    subjects.length <= 11 ? 0.60 :
-    subjects.length <= 15 ? 0.64 :
-    subjects.length <= 16 ? 0.62 :
-    subjects.length <= 18 ? 0.69 :
-    0.69;
+const zoom =
+  subjects.length <= 11 ? 0.60 :
+  subjects.length <= 13 ? 0.55 :
+  subjects.length <= 15 ? 0.50 :
+  subjects.length <= 17 ? 0.46 :
+  subjects.length <= 18 ? 0.43 :
+  0.40;
 
   // ── Print ─────────────────────────────────────────────────────
   const handlePrint = () => {
